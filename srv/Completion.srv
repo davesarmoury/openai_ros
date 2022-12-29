@@ -1,0 +1,9 @@
+string prompt
+float32 temperature
+---
+string finish_reason
+string text
+string model
+int32 completion_tokens
+int32 prompt_tokens
+int32 total_tokens

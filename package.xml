@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>openai_ros</name>
+  <version>0.0.0</version>
+  <description>The openai_ros package</description>
+
+  <maintainer email="davesarmoury@gmail.com">Dave Niewinski</maintainer>
+
+  <license>CC-BY-3</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <exec_depend>openai</exec_depend>
+  <exec_depend>rospy</exec_depend>
+  <build_depend>message_generation</build_depend>
+  <exec_depend>message_runtime</exec_depend>
+</package>

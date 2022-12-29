@@ -1,0 +1,11 @@
+<launch>
+  <arg name="key" default="$(env OPENAI_KEY)" />
+  <arg name="max_tokens" default="256" />
+  <arg name="model" default="text-davinci-003" />
+
+  <node pkg="openai_ros" type="openai_node.py" name="openai" output="screen">
+    <param name="key" value="$(arg key)" />
+    <param name="max_tokens" value="$(arg max_tokens)" />
+    <param name="model" value="$(arg model)" />
+  </node>  
+</launch>
