@@ -1,5 +1,5 @@
 <launch>
-  <arg name="key" default="$(env OPENAI_KEY)" />
+  <arg name="key" default="$(env OPENAI_API_KEY)" />
   <arg name="max_tokens" default="256" />
   <arg name="model" default="text-davinci-003" />
 
