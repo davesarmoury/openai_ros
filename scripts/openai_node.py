@@ -18,6 +18,9 @@ def servicer(req):
     res.prompt_tokens = response.usage.prompt_tokens
     res.total_tokens = response.usage.total_tokens
 
+    # When response is not working, completion_tokens is None, which chase error on CompleteResponse format(int32)
+    if not isinstance(res.completion_tokens, int):
+        res.completion_tokens = -1
     return res
 
 def main():
