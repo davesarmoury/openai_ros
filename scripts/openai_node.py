@@ -24,10 +24,16 @@ def legacy_servicer(req):
     return res
 
 def chat_servicer(req):
-    global client, max_tokens, model
+    global client, max_tokens, model, message_history, max_history_length
+
     res = CompletionResponse()
 
-    response = client.chat.completions.create(model=model, messages=[{"role": "user", "content": req.prompt}], temperature=req.temperature, max_tokens=max_tokens)
+    message_history.append({"role": "user", "content": req.prompt})
+    response = client.chat.completions.create(model=model, messages=message_history, temperature=req.temperature, max_tokens=max_tokens)
+
+    message_history.append({"role": "assistant", "content": response.choices[0].message.content})
+    while len(message_history) > max_history_length:
+        message_history.pop(0)
 
     res.finish_reason = response.choices[0].finish_reason
     res.text = response.choices[0].message.content
@@ -42,13 +48,16 @@ def chat_servicer(req):
     return res
 
 def main():
-    global client, max_tokens, model
+    global client, max_tokens, model, message_history, max_history_length
     pub = rospy.Publisher('available_models', StringArray, queue_size=1, latch=True)
     rospy.init_node('openai_node', anonymous=True)
 
     client = OpenAI(api_key=rospy.get_param('~key'))
     max_tokens = rospy.get_param('~max_tokens', default=256)
-    model = rospy.get_param('~model', default='text-davinci-003')
+    max_history_length = rospy.get_param('~max_history_length', default=12)
+    model = rospy.get_param('~model', default='gpt-3.5-turbo')
+
+    message_history = []
 
     models_msg = StringArray()
     for m in client.models.list():
