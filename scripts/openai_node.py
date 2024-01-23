@@ -35,6 +35,8 @@ def chat_servicer(req):
     while len(message_history) > max_history_length:
         message_history.pop(0)
 
+    rospy.loginfo(response)
+
     res.finish_reason = response.choices[0].finish_reason
     res.text = response.choices[0].message.content
     res.model = response.model
@@ -52,7 +54,7 @@ def main():
     pub = rospy.Publisher('available_models', StringArray, queue_size=1, latch=True)
     rospy.init_node('openai_node', anonymous=True)
 
-    client = OpenAI(api_key=rospy.get_param('~key'))
+    client = OpenAI(api_key=rospy.get_param('~key'), base_url=rospy.get_param('~base_url'))
     max_tokens = rospy.get_param('~max_tokens', default=256)
     max_history_length = rospy.get_param('~max_history_length', default=12)
     model = rospy.get_param('~model', default='gpt-3.5-turbo')
