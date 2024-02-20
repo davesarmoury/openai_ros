@@ -4,6 +4,7 @@
   <arg name="max_history_length" default="12" />
   <arg name="model" default="text-davinci-003" />
   <arg name="base_url" default="https://api.openai.com/v1" />
+  <arg name="system_prompt" default="You are a helpful assistant." />
 
   <node pkg="openai_ros" type="openai_node.py" name="openai" output="screen">
     <param name="key" value="$(arg key)" />
@@ -11,5 +12,6 @@
     <param name="max_history_length" value="$(arg max_history_length)" />
     <param name="model" value="$(arg model)" />
     <param name="base_url" value="$(arg base_url)" />
+    <param name="system_prompt" value="$(arg system_prompt)" />
   </node>  
 </launch>

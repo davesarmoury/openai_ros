@@ -24,12 +24,12 @@ def legacy_servicer(req):
     return res
 
 def chat_servicer(req):
-    global client, max_tokens, model, message_history, max_history_length
+    global client, max_tokens, model, message_history, max_history_length, system_prompt
 
     res = CompletionResponse()
 
     message_history.append({"role": "user", "content": req.prompt})
-    response = client.chat.completions.create(model=model, messages=message_history, temperature=req.temperature, max_tokens=max_tokens)
+    response = client.chat.completions.create(model=model, messages=system_prompt + message_history, temperature=req.temperature, max_tokens=max_tokens)
 
     message_history.append({"role": "assistant", "content": response.choices[0].message.content})
     while len(message_history) > max_history_length:
@@ -50,7 +50,7 @@ def chat_servicer(req):
     return res
 
 def main():
-    global client, max_tokens, model, message_history, max_history_length
+    global client, max_tokens, model, message_history, max_history_length, system_prompt
     pub = rospy.Publisher('available_models', StringArray, queue_size=1, latch=True)
     rospy.init_node('openai_node', anonymous=True)
 
@@ -58,7 +58,9 @@ def main():
     max_tokens = rospy.get_param('~max_tokens', default=256)
     max_history_length = rospy.get_param('~max_history_length', default=12)
     model = rospy.get_param('~model', default='gpt-3.5-turbo')
+    system_prompt = rospy.get_param('~system_prompt', default='You are a helpful assistant.')
 
+    system_prompt = [{"role": "system", "content": system_prompt}]
     message_history = []
 
     models_msg = StringArray()
